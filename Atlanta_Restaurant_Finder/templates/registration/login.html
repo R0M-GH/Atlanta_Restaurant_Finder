@@ -14,6 +14,14 @@
         </script>
     </head>
     <body>
+        <div class="form-container">
+            <form method = "POST" id="login-form" class="form">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit" id="login-button">Login</button>
+                <p>Don't have an account. Create one <a href ='/register'>here</a></p>
+            </form>
+        </div>
         <section >
             <img src="{% static "Atlanta_Restaurant_Finder/image/loginPage.jpg" %}">
         </section>
