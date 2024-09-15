@@ -13,17 +13,28 @@
             }
         </script>
     </head>
-    <body>
-        <div class="form-container">
-            <form id="login-form" class="form" onsubmit="redirectToHome(event)">
-                <h2>Login</h2>
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit" id="login-button">Login</button>
-            </form>
+  <body>
+    <div class="new-account-screen">
+      <div class="overlap-group-wrapper">
+        <div class="overlap-group">
+          <img class="rectangle" src="image/image.svg" />
+          <img class="img" src="image/rectangle-3.svg" />
+          <img class="rectangle-2" src="image/rectangle-7.svg" />
+          <div class="text-wrapper">Create Account</div>
+          <div class="div"></div>
+          <img class="account-circle" src="image/account-circle.svg" />
+          <p class="new-username">
+            <span class="span">&nbsp;&nbsp;</span>
+            <span class="text-wrapper-2">New Username</span>
+            <span class="span">&nbsp;</span>
+          </p>
+          <div class="password">New Password</div>
+          <img class="https" src="image/https.svg" />
+          <div class="password-2">Login</div>
         </div>
-        <section >
-            <img src="{% static "Atlanta_Restaurant_Finder/image/loginPage.jpg" %}">
-        </section>
-    </body>
+      </div>
+    </div>
+  </body>
 </html>
+
+

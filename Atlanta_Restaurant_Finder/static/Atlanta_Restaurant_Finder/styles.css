@@ -1,74 +1,137 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: rgb(9,10,50);
-  margin: 0;
-  padding: 0;
-
-}
-
-.form-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.form {
+.new-account-screen {
+  background-color: #ffffff;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
 }
 
-h2 {
-  margin-bottom: 20px;
-  text-align: center;
+.new-account-screen .overlap-group-wrapper {
+  background-color: #ffffff;
+  width: 100%;
+  height: 1024px;
 }
 
-input[type="text"],
-input[type="password"],
-button {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 16px;
+.new-account-screen .overlap-group {
+  position: relative;
+  height: 1024px;
+  background-image: url(./image/image-3.png);
+  background-size: cover;
+  background-position: 50% 50%;
 }
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-section {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    padding: 100px
-}
-section::before{
-    content: '';
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: linear-gradient(to top, rgb(0,6,43) , #fff);
-    z-index: 1000;
-}
-section img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    object-fit: contain;
-    pointer-events: none;
-}
-button:hover {
-  background-color: #45a049;
+.new-account-screen .rectangle {
+  position: absolute;
+  width:  100%;
+  height: 1024px;
+  top: 0;
+  left: 0;
 }
 
-@media screen and (max-width: 600px) {
-  .form-container {
-    width: 90%;
-  }
+.new-account-screen .img {
+  position: absolute;
+  width: 740px;
+  height: 80px;
+  top: 639px;
+  left: 350px;
+}
+
+.new-account-screen .rectangle-2 {
+  position: absolute;
+  width: 740px;
+  height: 80px;
+  top: 508px;
+  left: 350px;
+}
+
+.new-account-screen .text-wrapper {
+  position: absolute;
+  width: 1125px;
+  top: 220px;
+  left: 223px;
+  font-family: "Gloock", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 150px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.new-account-screen .div {
+  position: absolute;
+  width: 280px;
+  height: 62px;
+  top: 791px;
+  left: 580px;
+  background-color: #ffffff;
+  border-radius: 30px;
+}
+
+.new-account-screen .account-circle {
+  position: absolute;
+  width: 71px;
+  height: 71px;
+  top: 513px;
+  left: 360px;
+}
+
+.new-account-screen .new-username {
+  position: absolute;
+  width: 480px;
+  top: 518px;
+  left: 448px;
+  font-family: "Inter", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.new-account-screen .span {
+  font-family: "Inter", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.new-account-screen .text-wrapper-2 {
+  font-style: italic;
+  font-size: 48px;
+}
+
+.new-account-screen .password {
+  position: absolute;
+  width: 442px;
+  top: 649px;
+  left: 448px;
+  font-family: "Inter", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 48px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.new-account-screen .https {
+  position: absolute;
+  width: 61px;
+  height: 61px;
+  top: 648px;
+  left: 364px;
+}
+
+.new-account-screen .password-2 {
+  position: absolute;
+  width: 463px;
+  top: 790px;
+  left: 649px;
+  font-family: "Inter", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 48px;
+  letter-spacing: 0;
+  line-height: normal;
 }
