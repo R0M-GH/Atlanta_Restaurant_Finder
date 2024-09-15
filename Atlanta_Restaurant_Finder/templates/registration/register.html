@@ -1,0 +1,10 @@
+<html>
+    <div class="form-container">
+        <form method = "POST" id="register-form" class="form">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" id="register-button">Login</button>
+            <p>Already have an account. Login <a href ='/login'>here</a></p>
+        </form>
+    </div>
+</html>
