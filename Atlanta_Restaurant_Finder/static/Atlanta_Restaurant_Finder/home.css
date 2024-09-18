@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(9,10,50);
+    overflow: hidden;
+}
+
+header {
+    background-color: rgba(169, 36, 246, 0.66);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 2.5%;
+    z-index: 10000;
+}
+.logout-button {
+    background-color: black;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    padding-top: 80px; /* Adjust this value to give room for the header */
+}
+
+section img {
+    position: absolute;
+    top: 58px; /* Adjust this value to match the padding-top of the section */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 58px); /* Subtract the top padding to fit the remaining space */
+    object-fit: cover; /* Changed from contain to cover */
+    pointer-events: none;
+}
+
+.form-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10001;
+    /* Add styles for your form container */
+}
