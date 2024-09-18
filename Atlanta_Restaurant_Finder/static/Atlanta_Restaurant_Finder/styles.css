@@ -77,27 +77,27 @@ h1 {
 .button-container {
     display: flex;
     justify-content: space-between;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
 }
 #login-button,
 .create-account-button {
-    width: 30%; /* Make both buttons fit side by side */
+    width: 30%;
     padding: 10px;
     border: none;
     border-radius: 30px;
     cursor: pointer;
     text-align: center;
     font-size: 1em;
-    background-color: rgba(169, 36, 246, 0.8); /* Set button background to 80% opacity */
+    background-color: rgba(169, 36, 246, 0.8);
     color: white;
 }
 #login-button {
-    background-color: #a924f6; /* Button color */
+    background-color: #a924f6;
     color: white;
 }
 
 #login-button:hover {
-    background-color: #9220d1; /* Darker hover effect */
+    background-color: #9220d1;
 }
 .create-account-button {
     background-color: #fff;
@@ -108,7 +108,7 @@ h1 {
 }
 #create-account-button {
     background-color: transparent;
-    border: 2px solid rgba(169, 36, 246, 0.8); /* Transparent background with colored border */
+    border: 2px solid rgba(169, 36, 246, 0.8);
 }
 .create-account-button:hover {
     background-color: #a924f6;
