@@ -11,13 +11,18 @@
                 event.preventDefault();
                 window.location.href = '/home';
             }
+            function logout() {
+                window.location.href = '../accounts/login/';
+            }
         </script>
     </head>
     <header>
-
+        <button onclick="logout()" class="logout-button">Logout</button>
     </header>
     <body>
-
+        <section>
+            <img src="{% static "Atlanta_Restaurant_Finder/image/homePage.jpg" %}">
+        </section>
     </body>
 </html>
 

@@ -10,6 +10,9 @@ def hi(request):
 @login_required
 def homeView(request):
     return render(request, 'Atlanta_Restaurant_Finder/home.html')
+@login_required
+def mapView(request):
+    return render(request, 'Atlanta_Restaurant_Finder/map.html')
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
