@@ -1,10 +1,35 @@
+{% load static %}
 <html>
-    <div class="form-container">
-        <form method = "POST" id="register-form" class="form">
-            {% csrf_token %}
-            {{ form }}
-            <button type="submit" id="register-button">Login</button>
-            <p>Already have an account. Login <a href ='/login'>here</a></p>
-        </form>
-    </div>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static '/Atlanta_Restaurant_Finder/creat.css' %}">
+        <script>
+            function logout() {
+                window.location.href = '../accounts/login/';
+            }
+        </script>
+    </head>
+    <body>
+        <div class="form-container">
+            <h1>Create Account</h1>
+            <form method="POST" id="register-form" class="form">
+                {% csrf_token %}
+                {{ form.non_field_errors }} <!-- Display form errors -->
+
+                {{ form.username }}
+                {{ form.password1 }} <!-- Password Field -->
+                {{ form.password2 }} <!-- Confirm Password Field -->
+
+                <button type="submit" id="login-button">Create Account</button>
+                <a href="../accounts/login/" style="text-decoration:none" class="create-account-button">Go to Login</a>
+            </form>
+        </div>
+        <section>
+            <img src="{% static 'Atlanta_Restaurant_Finder/image/signUpPage.jpg' %}">
+            <div class="overlay"></div>
+        </section>
+    </body>
 </html>

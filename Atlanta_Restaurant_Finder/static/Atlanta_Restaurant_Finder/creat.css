@@ -12,7 +12,6 @@ body {
     font-family: 'Gloock';
 }
 
-/* Full screen background image section */
 section {
     position: relative;
     width: 100%;
@@ -26,7 +25,7 @@ section img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 1; /* Image behind form */
+    z-index: 1;
 }
 .overlay {
     position: absolute;
@@ -34,30 +33,30 @@ section img {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(169, 36, 246, 0.66);
-    opacity: .3;
+    background-color: rgba(36, 169, 246, 0.66);
+    opacity: .4;
     z-index: 2;
 }
+
 .form-container {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: transparent; /* Slightly transparent form background */
+    background-color: transparent;
     padding: 20px 40px;
     border-radius: 10px;
-    z-index: 3; /* Form on top */
+    z-index: 3;
     text-align: center;
 }
 
-/* Form elements styling */
 h1 {
-    font-size: 100px;
+    font-size: 70px;
     font-family: Gloock;
     margin-bottom: 20px;
     background-color: transparent;
     color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow for contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .form input {
@@ -66,19 +65,19 @@ h1 {
     border-radius: 30px;
     margin-bottom: 15px;
     border: none;
-    background-color: white; /* Set background to 30% white opacity */
+    background-color: white;
     color: #000;
     font-size: 1.1em;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-.form input::placeholder {
-    color: black; /* Lighter placeholder text */
-}
+
 .button-container {
     display: flex;
     justify-content: space-between;
     gap: 10px;
 }
+
+/* Buttons styling */
 #login-button,
 .create-account-button {
     width: 30%;
@@ -88,47 +87,32 @@ h1 {
     cursor: pointer;
     text-align: center;
     font-size: 1em;
-    background-color: rgba(169, 36, 246, 0.8);
+    background-color: rgba(36, 169, 246, 0.66);
     color: white;
 }
 #login-button {
-    background-color: #a924f6;
+    background-color: rgba(36, 169, 246, 0.66);
     color: white;
 }
-
 #login-button:hover {
-    background-color: #9220d1;
-}
-.create-account-button {
-    background-color: #fff;
-    color: #a924f6;
-    text-decoration: none;
-    display: inline-block;
-    border: 2px solid #a924f6;
-}
-#create-account-button {
-    background-color: transparent;
-    border: 2px solid rgba(169, 36, 246, 0.8);
-}
-.create-account-button:hover {
-    background-color: #a924f6;
-    color: white;
+    background-color: rgba(36, 169, 246, 0.50);
 }
 
+.create-account-button {
+    border: 2px solid rgba(36, 169, 246, 0.66);
+    background-color: white;
+    color: rgba(36, 169, 246, 0.66);
+}
+
+.create-account-button:hover {
+    background-color: rgba(36, 169, 246, 0.66);
+    color: white;
+}
 p {
     margin-top: 15px;
-    color: #fff;
+    color: black;
     font-size: 0.9em;
 }
 
-.fullscreen-rectangle {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(169, 36, 246, 0.66);
-    opacity: .3;
-    opacity: .3;
-    z-index: 9999;
-}
+
+
