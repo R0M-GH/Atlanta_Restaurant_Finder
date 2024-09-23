@@ -1,7 +1,10 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .forms import RegistrationForm  # Import the form you just crea
 
 
 @login_required
@@ -13,12 +16,27 @@ def homeView(request):
 @login_required
 def mapView(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("login")
+#     else:
+#         form = UserCreationForm()
+#     return render(request, 'registration/register.html', {"form": form})
+
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Create user with validated data
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = User.objects.create_user(username=username, password=password)
+            # Optionally, you can add more user attributes here
             return redirect("login")
     else:
-        form = UserCreationForm()
+        form = RegistrationForm()
+
     return render(request, 'registration/register.html', {"form": form})
