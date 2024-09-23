@@ -1,35 +1,127 @@
 {% load static %}
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static '/Atlanta_Restaurant_Finder/creat.css' %}">
-        <script>
-            function logout() {
-                window.location.href = '../accounts/login/';
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static '/Atlanta_Restaurant_Finder/creat.css' %}">
+    <script>
+        function logout() {
+            window.location.href = '../accounts/login/';
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('id_password1').value;
+            const confirmPassword = document.getElementById('id_password2').value;
+
+            const lengthRequirement = document.getElementById('length-requirement');
+            const uppercaseRequirement = document.getElementById('uppercase-requirement');
+            const numberRequirement = document.getElementById('number-requirement');
+            const specialCharRequirement = document.getElementById('special-char-requirement');
+            const notCommonPasswordRequirement = document.getElementById('not-common-password-requirement');
+            const notNumericRequirement = document.getElementById('not-numeric-requirement');
+            const matchPasswordRequirement = document.getElementById('match-password-requirement');
+
+            let isValid = true; // Track overall validity
+
+            // Check if password is at least 8 characters long
+            if (password.length >= 8) {
+                lengthRequirement.classList.add('valid');
+            } else {
+                lengthRequirement.classList.remove('valid');
+                isValid = false;
             }
-        </script>
-    </head>
-    <body>
-        <div class="form-container">
-            <h1>Create Account</h1>
-            <form method="POST" id="register-form" class="form">
-                {% csrf_token %}
-                {{ form.non_field_errors }} <!-- Display form errors -->
 
-                {{ form.username }}
-                {{ form.password1 }} <!-- Password Field -->
-                {{ form.password2 }} <!-- Confirm Password Field -->
+            // Check if password contains an uppercase letter
+            if (/[A-Z]/.test(password)) {
+                uppercaseRequirement.classList.add('valid');
+            } else {
+                uppercaseRequirement.classList.remove('valid');
+                isValid = false;
+            }
 
-                <button type="submit" id="login-button">Create Account</button>
-                <a href="../accounts/login/" style="text-decoration:none" class="create-account-button">Go to Login</a>
-            </form>
-        </div>
-        <section>
-            <img src="{% static 'Atlanta_Restaurant_Finder/image/signUpPage.jpg' %}">
-            <div class="overlay"></div>
-        </section>
-    </body>
+            // Check if password contains a number
+            if (/\d/.test(password)) {
+                numberRequirement.classList.add('valid');
+            } else {
+                numberRequirement.classList.remove('valid');
+                isValid = false;
+            }
+
+            // Check if password contains a special character
+            if (/[^A-Za-z0-9]/.test(password)) {
+                specialCharRequirement.classList.add('valid');
+            } else {
+                specialCharRequirement.classList.remove('valid');
+                isValid = false;
+            }
+
+            // Check if password is not entirely numeric
+            if (!/^\d+$/.test(password)) {
+                notNumericRequirement.classList.add('valid');
+            } else {
+                notNumericRequirement.classList.remove('valid');
+                isValid = false;
+            }
+
+            // Check if passwords match
+            if (password && confirmPassword && password === confirmPassword) {
+                matchPasswordRequirement.classList.add('valid');
+            } else {
+                matchPasswordRequirement.classList.remove('valid');
+                isValid = false;
+            }
+
+            // Mark common password as valid for now (server-side check)
+            notCommonPasswordRequirement.classList.add('valid');
+
+            // Enable or disable the submit button based on validity
+            document.getElementById('register-button').disabled = !isValid;
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Create Account</h1>
+        <form method="POST" id="register-form" class="form">
+            {% csrf_token %}
+            {{ form.non_field_errors }} <!-- Display form errors -->
+
+            <!-- Add placeholder for username -->
+            {{ form.username }} 
+
+            <!-- Add placeholder for password -->
+            {{ form.password1 }}
+
+            <!-- Add placeholder for confirm password -->
+            {{ form.password2 }}
+
+            <!-- Password requirements list, centered between second password and Create Account button -->
+            <ul class="password-requirements">
+                <li id="length-requirement">At least 8 characters</li>
+                <li id="uppercase-requirement">At least one uppercase letter</li>
+                <li id="number-requirement">At least one number</li>
+                <li id="special-char-requirement">At least one special character (e.g., !@#$%^&*)</li>
+                <li id="not-common-password-requirement">Not a common password</li>
+                <li id="not-numeric-requirement">Not entirely numeric</li>
+                <li id="match-password-requirement">Passwords must match</li>
+            </ul>
+
+            <button type="submit" id="register-button" class = "create-account-button" disabled>Create Account</button>
+            <a href="../accounts/login/" style="text-decoration:none" class="create-account-button">Go to Login</a>
+        </form>
+    </div>
+    <section>
+        <img src="{% static 'Atlanta_Restaurant_Finder/image/signUpPage.jpg' %}">
+        <div class="overlay"></div>
+    </section>
+    <script>
+        // Listen for changes in both password fields
+        document.getElementById('id_password1').addEventListener('input', validatePassword);
+        document.getElementById('id_password2').addEventListener('input', validatePassword);
+    </script>
+</body>
 </html>
+
+
