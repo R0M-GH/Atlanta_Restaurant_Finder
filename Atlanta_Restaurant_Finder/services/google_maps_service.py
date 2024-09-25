@@ -16,6 +16,17 @@ Maps APIs needed:
 """
 
 import requests
+import googlemaps.places
 from django.conf import settings
 
-def
+gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
+
+def get_place_id(address):
+    pass
+
+
+
+# share with ppl
+# unique identifier for locations to store in favorites
+# maps.html errors
+# work
