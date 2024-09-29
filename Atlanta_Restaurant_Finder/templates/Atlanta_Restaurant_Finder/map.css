@@ -53,7 +53,7 @@ body {
 }
 #filter-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     margin-top: 10px;
 }
 .filter-button {
@@ -62,6 +62,7 @@ body {
     border-radius: 25px;
     background: linear-gradient(90deg, #2196F3, #64B5F6);
     color: white;
+    font-size: smaller;
     font-weight: bold;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;

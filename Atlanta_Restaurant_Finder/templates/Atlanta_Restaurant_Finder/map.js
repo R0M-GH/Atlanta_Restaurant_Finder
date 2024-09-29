@@ -185,29 +185,33 @@ function performSearch(query, dist = 'All', rating = 'All') {
         default: radius = 9000;
     }
 
-    const service = new google.maps.places.PlacesService(map);
-    service.nearbySearch({
-        location: { lat: 33.7490, lng: -84.3880 },
-        radius: radius,
-        keyword: query,
-        type: 'restaurant',
-    }, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-            currentResults = results;
-
-            if (currentRatingFilter !== 'All') {
-                const ratingValue = parseInt(currentRatingFilter.split(' ')[0], 10);
-                currentResults = currentResults.filter(place => {
-                    return place.rating && place.rating >= ratingValue;
-                });
+    if (query === '!!favorites!!') {
+        return;
+    } else {
+        const service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+            location: {lat: 33.7490, lng: -84.3880},
+            radius: radius,
+            keyword: query,
+            type: 'restaurant',
+        }, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                currentResults = results;
+            } else {
+                displayResults([]);
+                alert('No places found. Please try another search term.');
             }
+        });
+    }
 
-            displayResults(currentResults);
-        } else {
-            displayResults([]);
-            alert('No places found. Please try another search term.');
-        }
-    });
+    if (currentRatingFilter !== 'All') {
+        const ratingValue = parseInt(currentRatingFilter.split(' ')[0], 10);
+        currentResults = currentResults.filter(place => {
+            return place.rating && place.rating >= ratingValue;
+        });
+    }
+
+    displayResults(currentResults);
 }
 
 function changeDistanceFilter() {
