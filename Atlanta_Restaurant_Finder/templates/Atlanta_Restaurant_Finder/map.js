@@ -8,7 +8,7 @@ let currentRatingFilter = 'All';
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 33.753746, lng: -84.386330 },
-        zoom: 13,
+        zoom: 12,
         mapTypeId: 'roadmap',
         disableDefaultUI: true
     });
@@ -37,11 +37,12 @@ function displayResults(results) {
     initMap();
     const resultsContainer = document.getElementById("results");
     const detailsContainer = document.getElementById("details");
-
     resultsContainer.innerHTML = '';
     detailsContainer.style.display = 'none';
 
     clearMarkers();
+
+    if (currentQuery === '') return;
 
     if (results.length > 0) {
         resultsContainer.style.display = 'block';
@@ -51,12 +52,8 @@ function displayResults(results) {
             card.classList.add('card');
             card.innerHTML = `
                 <div class="card-title">${place.name}</div>
-                <div class="card-info star-rating">
-                    ${'★'.repeat(Math.round(place.rating || 0))}${'☆'.repeat(5 - Math.round(place.rating || 0))} (${place.rating || 'N/A'}/5)
-                </div>
-                <div class="card-info">
-                    <i class="fas fa-map-marker-alt"></i> ${place.vicinity || 'N/A'}
-                </div>
+                <div class="card-info star-rating">${'★'.repeat(Math.round(place.rating || 0))}${'☆'.repeat(5 - Math.round(place.rating || 0))} (${place.rating || 'N/A'}/5)</div>
+                <div class="card-info"><i class="fas fa-map-marker-alt"></i> ${place.vicinity || 'N/A'}</div>
             `;
             card.onclick = () => showDetails(place);
             resultsContainer.appendChild(card);
@@ -92,26 +89,27 @@ function showDetails(place) {
                     <div class="details-title">${details.name}</div>
                     <div class="details-info"><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(details.vicinity)}" target="_blank">${details.vicinity || 'N/A'}</a></div>
                     <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
-                    <div class="details-info"><i class="fas fa-globe"></i> <a href="${details.website}" target="_blank">${details.website ? 'Website' : 'N/A'}</a></div>
+                    <div class="details-info"><i class="fas fa-clock"></i> ${details.opening_hours.weekday_text[new Date().getDay() + 6 % 7]}</div>
                     <div class="details-info star-rating"><i class="fas fa-star"></i> ${'★'.repeat(Math.round(details.rating || 0))}${'☆'.repeat(5 - Math.round(details.rating || 0))} (${details.rating || 'N/A'}/5)</div>
                     <div class="details-info"><i class="fas fa-utensils"></i> Cuisine: ${details.types.find(type => type.includes("_restaurant")) ? details.types.find(type => type.includes("_restaurant")).replace("_restaurant", "").replace("_", " ") : "Restaurant"}</div>
                 </div>
                 <div class="details-image-carousel">${imageSlides}</div>
-                <div class="expand" onclick="toggleReviews()">Show Reviews</div>
+                <div class="expand" id="reviews-toggle" onclick="toggleReviews()">Show Reviews</div>
                 <div class="reviews" style="display: none; max-height: 200px; overflow-y: auto;"></div>
             `;
 
             if (details.photos) {
                 setTimeout(() => {
                     $('.details-image-carousel').slick({
-                        dots: false,
+                        dots: true,
+                        arrows: false,
                         infinite: true,
                         speed: 600,
                         fade: true,
                         slidesToShow: 1,
                         slidesToScroll: 1,
-                        nextArrow: '<button type="button" class="slick-next slick-arrow-custom"><i class="fas fa-chevron-right"></i></button>',
-                        prevArrow: '<button type="button" class="slick-prev slick-arrow-custom"><i class="fas fa-chevron-left"></i></button>',
+                        autoplay: true,
+                        autoplaySpeed: 2000,
                     });
                 }, 100);
             }
@@ -150,7 +148,13 @@ function showDetails(place) {
 
 function toggleReviews() {
     const reviewContainer = document.querySelector('.reviews');
-    reviewContainer.style.display = reviewContainer.style.display === 'none' ? 'block' : 'none';
+    if (reviewContainer.style.display === 'none') {
+        reviewContainer.style.display = 'block';
+        document.getElementById("reviews-toggle").innerText = "Hide Reviews";
+    } else {
+        reviewContainer.style.display = 'none';
+        document.getElementById("reviews-toggle").innerText = "Show Reviews";
+    }
 }
 
 function goBack() {
@@ -162,24 +166,43 @@ function goBack() {
     performSearch(currentQuery);
 }
 
-function performSearch(query) {
+function performSearch(query, dist = 'All', rating = 'All') {
     if (!query) {
-        initMap();
         displayResults([]);
         return;
     }
 
     clearMarkers();
+    currentQuery = query;
+
+    let radius;
+    switch (dist) {
+        case '1 mi': radius = 1609.34; break;
+        case '2 mi': radius = 3218.69; break;
+        case '3 mi': radius = 4828.03; break;
+        case '4 mi': radius = 6437.38; break;
+        case '5 mi': radius = 8046.72; break;
+        default: radius = 9000;
+    }
 
     const service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
         location: { lat: 33.7490, lng: -84.3880 },
-        radius: 7000,
+        radius: radius,
         keyword: query,
+        type: 'restaurant',
     }, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             currentResults = results;
-            applyFilters();
+
+            if (currentRatingFilter !== 'All') {
+                const ratingValue = parseInt(currentRatingFilter.split(' ')[0], 10);
+                currentResults = currentResults.filter(place => {
+                    return place.rating && place.rating >= ratingValue;
+                });
+            }
+
+            displayResults(currentResults);
         } else {
             displayResults([]);
             alert('No places found. Please try another search term.');
@@ -188,13 +211,20 @@ function performSearch(query) {
 }
 
 function changeDistanceFilter() {
-    const distanceOptions = ['All', '1 km', '2 km', '5 km'];
+    const distanceOptions = ['All', '1 mi', '2 mi', '3 mi', '4 mi', '5 mi'];
     const currentIndex = distanceOptions.indexOf(currentDistanceFilter);
     const nextIndex = (currentIndex + 1) % distanceOptions.length;
     currentDistanceFilter = distanceOptions[nextIndex];
 
-    document.getElementById("distance-filter").innerText = `Distance: ${currentDistanceFilter}`;
-    applyFilters();
+    const distanceButton = document.getElementById("distance-filter");
+    distanceButton.innerText = `Distance: ${currentDistanceFilter}`;
+    if (currentDistanceFilter !== 'All') {
+        distanceButton.classList.add('filter-active');
+    } else {
+        distanceButton.classList.remove('filter-active');
+    }
+
+    performSearch(currentQuery, currentDistanceFilter);
 }
 
 function changeRatingFilter() {
@@ -203,40 +233,15 @@ function changeRatingFilter() {
     const nextIndex = (currentIndex + 1) % ratingOptions.length;
     currentRatingFilter = ratingOptions[nextIndex];
 
-    document.getElementById("rating-filter").innerText = `Rating: ${currentRatingFilter}`;
-    applyFilters();
-}
-
-function applyFilters() {
-    let filteredResults = currentResults;
-
-    if (currentDistanceFilter !== 'All') {
-        let radius;
-        if (currentDistanceFilter === '1 km') {
-            radius = 1000;
-        } else if (currentDistanceFilter === '2 km') {
-            radius = 2000;
-        } else if (currentDistanceFilter === '5 km') {
-            radius = 5000;
-        }
-
-        filteredResults = filteredResults.filter(place => {
-            const distance = google.maps.geometry.spherical.computeDistanceBetween(
-                new google.maps.LatLng(33.753746, -84.386330),
-                place.geometry.location
-            );
-            return distance <= radius;
-        });
-    }
-
+    const ratingButton = document.getElementById("rating-filter");
+    ratingButton.innerText = `Rating: ${currentRatingFilter}`;
     if (currentRatingFilter !== 'All') {
-        const ratingValue = parseInt(currentRatingFilter.split(' ')[1].charAt(0), 10);
-        filteredResults = filteredResults.filter(place => {
-            return place.rating && place.rating >= ratingValue;
-        });
+        ratingButton.classList.add('filter-active');
+    } else {
+        ratingButton.classList.remove('filter-active');
     }
 
-    displayResults(filteredResults);
+    performSearch(currentQuery, undefined, currentRatingFilter);
 }
 
 document.getElementById("search-button").onclick = () => {
