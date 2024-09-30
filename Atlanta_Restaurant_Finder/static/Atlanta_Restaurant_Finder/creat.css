@@ -170,7 +170,17 @@ p {
 .password-requirements li:not(.valid) {
     color: red;
 }
-
+.form input[type="date"] {
+    width: 70%;
+    padding: 10px;
+    border-radius: 30px;
+    margin-bottom: 15px;
+    border: none;
+    background-color: white;
+    color: #000;
+    font-size: 1.1em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 
 
 
