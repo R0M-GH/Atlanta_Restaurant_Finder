@@ -1,29 +1,61 @@
+{#{% load static %}#}
+{#<html>#}
+{#    <head>#}
+{#        <meta charset="utf-8">#}
+{#        <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#        <meta name="description" content="">#}
+{#        <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#        <link rel="stylesheet" href="{% static 'Atlanta_Restaurant_Finder/home.css' %}">#}
+{#        <script>#}
+{#            function redirectToHome(event) {#}
+{#                event.preventDefault();#}
+{#                window.location.href = '/home';#}
+{#            }#}
+{#            function logout() {#}
+{#                window.location.href = '../login/';#}
+{#            }#}
+{#        </script>#}
+{#    </head>#}
+{#    <header>#}
+{#        <button onclick="logout()" class="logout-button">Logout</button>#}
+{#    </header>#}
+{#    <body>#}
+{#        <section>#}
+{#            <img src="{% static "Atlanta_Restaurant_Finder/image/homePage.jpg" %}">#}
+{#        </section>#}
+{#    </body>#}
+{#</html>#}
+
 {% load static %}
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'Atlanta_Restaurant_Finder/home.css' %}">
-        <script>
-            function redirectToHome(event) {
-                event.preventDefault();
-                window.location.href = '/home';
-            }
-            function logout() {
-                window.location.href = '../login/';
-            }
-        </script>
-    </head>
-    <header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Atlanta Restaurant Finder">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'Atlanta_Restaurant_Finder/home.css' %}">
+    <script>
+        function redirectToHome(event) {
+            event.preventDefault();
+            window.location.href = '/home';
+        }
+
+        function logout() {
+            window.location.href = '../login/';
+        }
+    </script>
+</head>
+   <header>
+        <h1>Atlanta Restaurant Finder</h1>
         <button onclick="logout()" class="logout-button">Logout</button>
     </header>
-    <body>
-        <section>
-            <img src="{% static "Atlanta_Restaurant_Finder/image/homePage.jpg" %}">
-        </section>
-    </body>
+<body>
+    <section>
+        <iframe src="map.html" title="Restaurant Map"></iframe>
+    </section>
+    <img src="{% static "Atlanta_Restaurant_Finder/image/daniel-l-PreuCmi2zm8-unsplash.jpg" %}">
+</body>
 </html>
 
 
