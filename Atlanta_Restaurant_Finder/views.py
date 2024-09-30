@@ -19,7 +19,7 @@ def custom_login_required(view_func):
     return _wrapped_view
 
 @custom_login_required
-def hi(request):
+def home_view(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html',{})
 
 @custom_login_required
@@ -39,7 +39,7 @@ def login_view(request):
 
             request.session['username'] = username
             #login(request, user)
-            return render(request, 'Atlanta_Restaurant_Finder/index.html')
+            return redirect("home_page")
         else:
             form = LoginForm()
             return render(request, 'registration/login.html', {'form': form, 'error': True})
