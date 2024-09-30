@@ -23,7 +23,7 @@ def home_view(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html',{})
 
 @custom_login_required
-def mapView(request):
+def map_view(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
 
 def login_view(request):
