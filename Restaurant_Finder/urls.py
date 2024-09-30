@@ -18,8 +18,6 @@ from django.contrib import admin
 from django.template.context_processors import request
 from django.urls import path, include
 
-from Atlanta_Restaurant_Finder.views import homeView
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('Atlanta_Restaurant_Finder.urls')),

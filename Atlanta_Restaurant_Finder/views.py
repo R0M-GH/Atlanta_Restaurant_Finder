@@ -21,23 +21,10 @@ def custom_login_required(view_func):
 @custom_login_required
 def hi(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html',{})
-@custom_login_required
-def homeView(request):
-    return render(request, 'Atlanta_Restaurant_Finder/home.html')
-    pass
 
 @custom_login_required
 def mapView(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
-# def register(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("login")
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'registration/register.html', {"form": form})
 
 def login_view(request):
     request.session.flush()
