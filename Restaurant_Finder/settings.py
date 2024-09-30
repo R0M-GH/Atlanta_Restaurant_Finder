@@ -125,6 +125,12 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/"
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # Google maps API key
 GOOGLE_MAPS_API_KEY = "AIzaSyDUR66ihx1SRQ1oqLWlAnmUFuE9swuiWUI"
+
+AUTHENTICATION_BACKENDS = [
+    'Restaurant_Finder.backendsCustom.MongoDBBackend',  # Path to your custom backend
+]
+
+LOGIN_URL = '/login/'

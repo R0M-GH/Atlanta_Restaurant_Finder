@@ -6,20 +6,19 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'Atlanta_Restaurant_Finder/styles.css' %}">
-        <script>
-            function redirectToHome(event) {
-                event.preventDefault();
-                window.location.href = '/home';
-            }
-        </script>
     </head>
     <body>
         <div class="form-container">
              <h1>Login</h1>
             <form method = "POST" id="login-form" class="form">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
+                {{ form.username }}
+                {{ form.password }}
+            
+                {% if error %}
+                    <p id = "loginErrorMessage" class = "errorMessage">Username or Password is incorrect!</p> 
+                {% endif %}
+            
                 <button type="submit" id="login-button">Login</button>
                 <a href="/register" class="create-account-button">Create Account</a>
             </form>
