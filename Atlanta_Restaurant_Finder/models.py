@@ -11,7 +11,7 @@ users_collection = db['users']
 class User:
     @staticmethod
     def authenticate(username, password):
-        user = users_collection.find_one({"username": username})
-        if user is not None and check_password(password, user["password"]):
-            return user
+        user_check = users_collection.find_one({"username": username})
+        if user_check is not None and check_password(password, user_check["password"]):
+            return user_check
         return None
