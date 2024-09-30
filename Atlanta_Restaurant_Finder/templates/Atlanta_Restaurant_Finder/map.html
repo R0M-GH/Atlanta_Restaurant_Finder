@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atlanta Restaurant Finder</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUR66ihx1SRQ1oqLWlAnmUFuE9swuiWUI&libraries=places"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
     <style>
         body {
             margin: 0;
@@ -48,7 +45,7 @@
             outline: none;
         }
         #search-button {
-            padding: 10px;
+            padding: 10px 15px;
             margin-left: 5px;
             border: none;
             border-radius: 25px;
@@ -60,7 +57,7 @@
         }
         #search-button:hover {
             background: linear-gradient(90deg, #1976D2, #42A5F5);
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
         #filter-container {
             display: flex;
@@ -73,31 +70,26 @@
             border-radius: 25px;
             background: linear-gradient(90deg, #2196F3, #64B5F6);
             color: white;
+            font-size: smaller;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
             margin-right: 5px;
             text-align: center;
         }
-        .filter-button:last-child {
-            margin-right: 0;
-        }
         .filter-button:hover {
             background: linear-gradient(90deg, #1976D2, #42A5F5);
-            transform: scale(1.025);
+            transform: scale(1.1);
+        }
+        .filter-button.filter-active {
+            background: linear-gradient(45deg, #ff4e50, #fd9898);
+            color: white;
         }
         #results {
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 5px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            padding: 10px;
             margin-top: 10px;
-            width: 100%;
             display: none;
-            position: absolute;
-            z-index: 1000;
         }
         .card {
             padding: 10px;
@@ -120,24 +112,20 @@
             font-size: 0.9em;
         }
         #details {
-            position: absolute;
-            top: 70px;
-            left: 350px;
-            z-index: 1000;
-            max-width: 400px;
-            background: white;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             display: none;
+            margin-top: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         .details-title {
             font-weight: bold;
-            font-size: 1.5em;
+            font-size: 1.2em;
             margin-bottom: 10px;
         }
         .details-info {
-            margin: 5px 0;
+            margin: 10px 0;
         }
         .expand {
             color: blue;
@@ -146,7 +134,7 @@
         }
         .back-button {
             display: inline-block;
-            margin-top: 10px;
+            margin-bottom: 10px;
             padding: 5px 10px;
             background: linear-gradient(90deg, #2196F3, #64B5F6);
             color: white;
@@ -166,173 +154,318 @@
             margin-bottom: 10px;
         }
         .star-rating {
-            color: #FFD700;
+            color: #bda301;
+        }
+        .reviews {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .review-card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .review-rating {
+            color: #bda301;
+            font-weight: bold;
+        }
+        .review-date {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .review-text {
+            font-size: 1em;
         }
     </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUR66ihx1SRQ1oqLWlAnmUFuE9swuiWUI&libraries=places"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js" defer></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
 </head>
 <body>
     <div id="search-container">
         <div id="search-bar">
-            <input id="search-input" type="text" placeholder="Enter a restaurant type..." />
+            <label for="search-input"></label><input id="search-input" type="text" placeholder="Enter a restaurant type..." />
             <button id="search-button"><i class="fas fa-search"></i></button>
         </div>
         <div id="filter-container">
-            <div class="filter-button">Distance <i class="fas fa-filter"></i></div>
-            <div class="filter-button">Ratings <i class="fas fa-filter"></i></div>
-            <div class="filter-button"><i class="fas fa-star"></i></div>
+            <button class="filter-button" id="distance-filter" onclick="changeDistanceFilter()">Distance: All</button>
+            <button class="filter-button" id="rating-filter" onclick="changeRatingFilter()">Rating: All</button>
+            <button class="filter-button" id="favorites-filter"><i class="fas fa-star"></i></button><!--onclick="changeRatingFilter()"-->
         </div>
         <div id="results"></div>
+        <div id="details"></div>
     </div>
     <div id="map"></div>
-    <div id="details"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script>
         let map;
-        const markers = [];
         let currentResults = [];
         let currentQuery = '';
+        let markers = [];
+        let currentDistanceFilter = 'All';
+        let currentRatingFilter = 'All';
 
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 33.7490, lng: -84.3880 },
-                zoom: 13,
+                center: { lat: 33.753746, lng: -84.386330 },
+                zoom: 12,
                 mapTypeId: 'roadmap',
                 disableDefaultUI: true
             });
         }
 
+        function createMarker(place) {
+            const marker = new google.maps.Marker({
+                position: place.geometry.location,
+                map: map,
+                title: place.name,
+            });
+
+            marker.addListener('click', function () {
+                showDetails(place);
+            });
+
+            markers.push(marker);
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
         function displayResults(results) {
+            initMap();
             const resultsContainer = document.getElementById("results");
+            const detailsContainer = document.getElementById("details");
             resultsContainer.innerHTML = '';
+            detailsContainer.style.display = 'none';
+
+            clearMarkers();
+
+            if (currentQuery === '') return;
 
             if (results.length > 0) {
                 resultsContainer.style.display = 'block';
-                currentResults = results;
+
+                results.forEach(place => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                        <div class="card-title">${place.name}</div>
+                        <div class="card-info star-rating">${'★'.repeat(Math.round(place.rating || 0))}${'☆'.repeat(5 - Math.round(place.rating || 0))} (${place.rating || 'N/A'}/5)</div>
+                        <div class="card-info"><i class="fas fa-map-marker-alt"></i> ${place.vicinity || 'N/A'}</div>
+                    `;
+                    card.onclick = () => showDetails(place);
+                    resultsContainer.appendChild(card);
+
+                    createMarker(place);
+                });
             } else {
-                resultsContainer.style.display = 'none';
+                resultsContainer.innerHTML = '<p>No restaurants found. Try a different search term.</p>';
+                resultsContainer.style.display = 'block';
             }
-
-            results.forEach(place => {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                card.innerHTML = `
-                    <div class="card-title">${place.name}</div>
-                    <div class="card-info star-rating">${'★'.repeat(Math.round(place.rating || 0))}${'☆'.repeat(5 - Math.round(place.rating || 0))} (${place.rating || 'N/A'})</div>
-                    <div class="card-info">Address: ${place.vicinity || 'N/A'}</div>
-                `;
-                card.onclick = () => showDetails(place);
-                resultsContainer.appendChild(card);
-
-                const marker = new google.maps.Marker({
-                    position: place.geometry.location,
-                    map: map,
-                    title: place.name,
-                });
-                markers.push(marker);
-
-                marker.addListener('click', () => {
-                    showDetails(place);
-                });
-            });
         }
 
         function showDetails(place) {
             const detailsContainer = document.getElementById("details");
-            detailsContainer.innerHTML = '';
+            const resultsContainer = document.getElementById("results");
 
-            const imageSlides = place.photos ? place.photos.map(photo => `<img class="details-image" src="${photo.getUrl({ maxWidth: 400 })}" />`).join('') : '';
-            detailsContainer.innerHTML = `
-                <div class="details-title">${place.name}</div>
-                <div class="details-image-carousel">${imageSlides}</div>
-                <div class="details-info">Address: ${place.vicinity || 'N/A'}</div>
-                <div class="details-info">Phone: ${place.formatted_phone_number || 'N/A'}</div>
-                <div class="details-info">Website: <a href="${place.website}" target="_blank">${place.website || 'N/A'}</a></div>
-                <div class="details-info star-rating">Rating: ${'★'.repeat(Math.round(place.rating || 0))}${'☆'.repeat(5 - Math.round(place.rating || 0))} (${place.rating || 'N/A'})</div>
-                <div class="expand" onclick="toggleReviews()">Show Reviews</div>
-                <div class="reviews" style="display: none;"></div>
-                <div class="back-button" onclick="goBack()">Back to Map</div>
-            `;
-
-            // Hide results and show details
-            document.getElementById("results").style.display = 'none';
+            resultsContainer.style.display = 'none';
             detailsContainer.style.display = 'block';
-            map.setCenter(place.geometry.location);
-            map.setZoom(19);
-            map.setMapTypeId('satellite');
-
-            $('.details-image-carousel').slick({
-                dots: true,
-                infinite: true,
-                speed: 500,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: true,
-            });
-
-            if (place.reviews && place.reviews.length) {
-                document.querySelector('.reviews').innerHTML = place.reviews.map(review => `<div class="details-info">${review.text}</div>`).join('');
-            }
-        }
-
-        function toggleReviews() {
-            const reviewContainer = document.querySelector('.reviews');
-            reviewContainer.style.display = reviewContainer.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function goBack() {
-            const detailsContainer = document.getElementById("details");
-            detailsContainer.style.display = 'none';
-            displayResults(currentResults);
-            markers.forEach(marker => marker.setMap(null));
-
-            // Run the search again to show pins
-            initMap();
-            performSearch(currentQuery);
-        }
-
-        function performSearch(query) {
-            if (!query) return; // Do not perform search if query is empty
-
-            markers.forEach(marker => marker.setMap(null));
-            markers.length = 0;
 
             const service = new google.maps.places.PlacesService(map);
-            service.nearbySearch({
-                location: { lat: 33.7490, lng: -84.3880 },
-                radius: 5000,
-                keyword: query,
-            }, (results, status) => {
+            service.getDetails({ placeId: place.place_id }, (details, status) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    displayResults(results);
+
+                    const imageSlides = details.photos ?
+                        details.photos.map(photo => `<div><img class="details-image" src="${photo.getUrl({ maxWidth: 400 })}"  alt="images"/></div>`).join('') : '';
+
+                    detailsContainer.innerHTML = `
+                        <div class="details-header">
+                            <div class="back-button" onclick="goBack()">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                Back to Results
+                            </div>
+                            <div class="details-title">${details.name}</div>
+                            <div class="details-info"><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(details.vicinity)}" target="_blank">${details.vicinity || 'N/A'}</a></div>
+                            <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
+                            <div class="details-info"><i class="fas fa-clock"></i> ${details.opening_hours.weekday_text[new Date().getDay() + 6 % 7]}</div>
+                            <div class="details-info star-rating"><i class="fas fa-star"></i> ${'★'.repeat(Math.round(details.rating || 0))}${'☆'.repeat(5 - Math.round(details.rating || 0))} (${details.rating || 'N/A'}/5)</div>
+                            <div class="details-info"><i class="fas fa-utensils"></i> Cuisine: ${details.types.find(type => type.includes("_restaurant")) ? details.types.find(type => type.includes("_restaurant")).replace("_restaurant", "").replace("_", " ") : "Restaurant"}</div>
+                        </div>
+                        <div class="details-image-carousel">${imageSlides}</div>
+                        <div class="expand" id="reviews-toggle" onclick="toggleReviews()">Show Reviews</div>
+                        <div class="reviews" style="display: none; max-height: 200px; overflow-y: auto;"></div>
+                    `;
+
+                    if (details.photos) {
+                        setTimeout(() => {
+                            $('.details-image-carousel').slick({
+                                dots: true,
+                                arrows: false,
+                                infinite: true,
+                                speed: 600,
+                                fade: true,
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                autoplay: true,
+                                autoplaySpeed: 2000,
+                            });
+                        }, 100);
+                    }
+
+                    map.setMapTypeId('hybrid');
+                    const targetLocation = details.geometry.location;
+                    map.panTo(targetLocation);
+
+                    let currentZoom = map.getZoom();
+                    const targetZoom = 19.5;
+                    const zoomStep = 0.5;
+
+                    const zoomInInterval = setInterval(() => {
+                        if (currentZoom < targetZoom) {
+                            currentZoom += zoomStep;
+                            map.setZoom(currentZoom);
+                        } else {
+                            clearInterval(zoomInInterval);
+                        }
+                    }, 100);
+
+                    if (details.reviews && details.reviews.length) {
+                        document.querySelector('.reviews').innerHTML = details.reviews.map(review => `
+                            <div class="review-card">
+                                <div class="review-rating">${'★'.repeat(Math.round(review.rating || 0))}${'☆'.repeat(5 - Math.round(review.rating || 0))}</div>
+                                <div class="review-date">${new Date(review.time * 1000).toLocaleDateString()}</div>
+                                <div class="review-text">${review.text}</div>
+                            </div>
+                        `).join('');
+                    }
                 } else {
-                    displayResults([]);
-                    alert('No places found. Please try another search term.');
+                    alert('Details not available for this place.');
                 }
             });
         }
 
+        function toggleReviews() {
+            const reviewContainer = document.querySelector('.reviews');
+            if (reviewContainer.style.display === 'none') {
+                reviewContainer.style.display = 'block';
+                document.getElementById("reviews-toggle").innerText = "Hide Reviews";
+            } else {
+                reviewContainer.style.display = 'none';
+                document.getElementById("reviews-toggle").innerText = "Show Reviews";
+            }
+        }
+
+        function goBack() {
+            const detailsContainer = document.getElementById("details");
+            detailsContainer.style.display = 'remove';
+            displayResults(currentResults);
+
+            initMap();
+            performSearch(currentQuery);
+        }
+
+        function performSearch(query, dist = 'All', rating = 'All') {
+            if (!query) {
+                displayResults([]);
+                return;
+            }
+
+            clearMarkers();
+            currentQuery = query;
+
+            let radius;
+            switch (dist) {
+                case '1 mi': radius = 1609.34; break;
+                case '2 mi': radius = 3218.69; break;
+                case '3 mi': radius = 4828.03; break;
+                case '4 mi': radius = 6437.38; break;
+                case '5 mi': radius = 8046.72; break;
+                default: radius = 9000;
+            }
+
+            if (query === '!!favorites!!') {
+                return;
+            } else {
+                const service = new google.maps.places.PlacesService(map);
+                service.nearbySearch({
+                    location: {lat: 33.7490, lng: -84.3880},
+                    radius: radius,
+                    keyword: query,
+                    type: 'restaurant',
+                }, (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        currentResults = results;
+                    } else {
+                        displayResults([]);
+                        alert('No places found. Please try another search term.');
+                    }
+                });
+            }
+
+            if (currentRatingFilter !== 'All') {
+                const ratingValue = parseInt(currentRatingFilter.split(' ')[0], 10);
+                currentResults = currentResults.filter(place => {
+                    return place.rating && place.rating >= ratingValue;
+                });
+            }
+
+            displayResults(currentResults);
+        }
+
+        function changeDistanceFilter() {
+            const distanceOptions = ['All', '1 mi', '2 mi', '3 mi', '4 mi', '5 mi'];
+            const currentIndex = distanceOptions.indexOf(currentDistanceFilter);
+            currentDistanceFilter = distanceOptions[(currentIndex + 1) % distanceOptions.length];
+
+            const distanceButton = document.getElementById("distance-filter");
+            distanceButton.innerText = `Distance: ${currentDistanceFilter}`;
+            if (currentDistanceFilter !== 'All') {
+                distanceButton.classList.add('filter-active');
+            } else {
+                distanceButton.classList.remove('filter-active');
+            }
+
+            performSearch(currentQuery, currentDistanceFilter);
+        }
+
+        function changeRatingFilter() {
+            const ratingOptions = ['All', '1*', '2*', '3*', '4*', '5*'];
+            const currentIndex = ratingOptions.indexOf(currentRatingFilter);
+            currentRatingFilter = ratingOptions[(currentIndex + 1) % ratingOptions.length];
+
+            const ratingButton = document.getElementById("rating-filter");
+            ratingButton.innerText = `Rating: ${currentRatingFilter}`;
+            if (currentRatingFilter !== 'All') {
+                ratingButton.classList.add('filter-active');
+            } else {
+                ratingButton.classList.remove('filter-active');
+            }
+
+            performSearch(currentQuery, undefined, currentRatingFilter);
+        }
+
         document.getElementById("search-button").onclick = () => {
-            const input = document.getElementById("search-input").value;
-            currentQuery = input; // Store current query
+            currentQuery = document.getElementById("search-input").value;
             performSearch(currentQuery);
         };
 
         document.getElementById("search-input").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
-                const input = document.getElementById("search-input").value;
-                currentQuery = input; // Store current query
+                currentQuery = document.getElementById("search-input").value;
                 performSearch(currentQuery);
-            }
-        });
-
-        document.addEventListener('click', function(event) {
-            const detailsContainer = document.getElementById("details");
-            const searchContainer = document.getElementById("search-container");
-
-            if (!detailsContainer.contains(event.target) && !searchContainer.contains(event.target)) {
-                detailsContainer.style.display = 'none';
             }
         });
 
