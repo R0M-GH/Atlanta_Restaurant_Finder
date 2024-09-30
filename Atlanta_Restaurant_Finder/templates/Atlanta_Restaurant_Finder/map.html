@@ -112,6 +112,8 @@
             font-size: 0.9em;
         }
         #details {
+            max-height: 300px; /* Adjust as needed */
+            overflow-y: auto;  /* Enable vertical scrolling */
             display: none;
             margin-top: 10px;
             padding: 15px;
@@ -183,6 +185,11 @@
         .review-text {
             font-size: 1em;
         }
+        #results {
+            max-height: 300px; /* Adjust as needed */
+            overflow-y: auto;  /* Enable vertical scrolling */
+            margin-top: 10px;
+            display: none;}
     </style>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUR66ihx1SRQ1oqLWlAnmUFuE9swuiWUI&libraries=places"></script>
