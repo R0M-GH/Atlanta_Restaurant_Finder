@@ -4,9 +4,9 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .forms import RegistrationForm  # Import the form you just crea
-
-
+from .forms import RegistrationForm, LoginForm  # Import the form you just crea
+from django.contrib.auth import authenticate, login
+#from .models import personCollection
 @login_required
 def hi(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html',{})
@@ -26,6 +26,18 @@ def mapView(request):
 #         form = UserCreationForm()
 #     return render(request, 'registration/register.html', {"form": form})
 
+def login_view(request):
+    if request.method == 'POST':
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            return render (request, 'Atlanta_Restaurant_Finder/index.html')
+        else:
+            form = LoginForm()
+            return render(request, 'registration/login.html', {'form': form, 'error': True})
+    else:
+        form = LoginForm()
+    return render(request, 'registration/login.html', {'form': form})
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
