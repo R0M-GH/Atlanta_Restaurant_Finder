@@ -96,10 +96,12 @@
 
             <!-- Add placeholder for confirm password -->
             {{ form.password2 }}
-
-            <!-- Add placeholder for birthday -->
-            <!-- <input type="date" id="id_birthday" name="birthday" required> -->
-
+            
+            <p>What is your birthday in the format MM/DD/YYYY?</p>
+            <p>This will be used as a security question if you forget your password</p>
+            
+            {{ form.securityAnswer }}
+            
             <!-- Password requirements list, centered between second password and Create Account button -->
             <ul class="password-requirements">
                 <li id="length-requirement">At least 8 characters</li>
@@ -112,7 +114,7 @@
             </ul>
 
             <button type="submit" id="register-button" class = "create-account-button" disabled>Create Account</button>
-            <a href="../accounts/login/" style="text-decoration:none" class="create-account-button">Go to Login</a>
+            <a href="../login/" style="text-decoration:none" class="create-account-button">Go to Login</a>
         </form>
     </div>
     <section>
