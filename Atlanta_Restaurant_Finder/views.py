@@ -17,6 +17,7 @@ def custom_login_required(view_func):
         else:
             return redirect("login") # Redirect to login page
     return _wrapped_view
+
 @custom_login_required
 def hi(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html',{})
