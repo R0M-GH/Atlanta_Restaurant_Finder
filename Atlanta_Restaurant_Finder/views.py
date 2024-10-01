@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
 from .forms import RegistrationForm
-from django.http import JsonResponse
-from .models import Favorite
+from django.http import JsonResponse, HttpResponse
+from .models import Favorites
 
 
 @login_required
@@ -13,12 +15,7 @@ def hi(request):
 
 
 @login_required
-def homeView(request):
-    return render(request, 'Atlanta_Restaurant_Finder/home.html')
-
-
-@login_required
-def mapView(request):
+def map_view(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
 
 
@@ -38,25 +35,21 @@ def register(request):
     return render(request, 'registration/register.html', {"form": form})
 
 
-def save_favorite(request):
-    print("save_favorite called")
-    if request.method == 'POST':
-        user = request.user
-        place_id = request.POST.get('place_id')
-
-        if not Favorite.objects.filter(user=user, place_id=place_id).exists():
-            favorite = Favorite(user=user, place_id=place_id)
-            favorite.save()
-            return JsonResponse({'status': 'saved'}, status=200)
-        else:
-            return JsonResponse({'status': 'already_exists'}, status=400)
-
-    return JsonResponse({'status': 'error'}, status=400)
+@csrf_exempt
+@login_required
+def save_favorite(request, place_id):
+    fav, created = Favorites.objects.get_or_create(user=request.user, place_id=place_id)
+    if not created:
+        fav.delete()
+        return JsonResponse({"message": "Removed from favorites", "status": "removed"})
+    else:
+        return JsonResponse({"message": "Added to favorites", "status": "added"})
 
 
+@csrf_exempt
+@login_required
 def load_favorites(request):
     print("load_favorite called")
-    if request.method == 'GET':
-        user = request.user
-        favorites = Favorite.objects.filter(user=user).values_list('place_id', flat=True)
-        return JsonResponse({'favorites': list(favorites)}, status=200)
+    favorites = Favorites.objects.filter(user=request.user)
+    return [{'place_id': fav.place_id} for fav in favorites]
+

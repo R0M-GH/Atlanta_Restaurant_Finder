@@ -264,7 +264,6 @@
                 radius: radius,
                 keyword: query,
                 type: 'restaurant',
-                pagetoken: 100,
             }, (results, status) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     currentResults = results;
@@ -278,7 +277,7 @@
                     displayResults(currentResults);
                 } else {
                     displayResults([]);
-                    alert('No places found. Please try another search term.');
+                    alert("No restaurants found. Try a different search term.");
                 }
             });
         }
@@ -292,7 +291,7 @@
 
             clearMarkers();
 
-            if (currentQuery === '') return;
+            if (results.length === 0) return;
 
             if (results.length > 0) {
                 resultsContainer.style.display = 'block';
@@ -311,7 +310,7 @@
                     createMarker(place);
                 });
             } else {
-                resultsContainer.innerHTML = '<p>No restaurants found. Try a different search term.</p>';
+                alert("No restaurants found. Try a different search term.");
                 resultsContainer.style.display = 'block';
             }
         }
@@ -335,7 +334,7 @@
                             <div class="back-button" onclick="goBack()">
                                 <i class="fa-solid fa-rotate-left"></i> Back to Results
                             </div>
-                            <button class="favorite-button" onclick="saveFavorite('${place.place_id}')"><i class="fas fa-star"></i></button>
+                            <button class="favorite-button" id="favorite-button-${place.place_id}" onclick="saveFavorite('${place.place_id}')"><i class="fas fa-star"></i></button>
                             <div class="details-title">${details.name}</div>
                             <div class="details-info"><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(details.vicinity)}" target="_blank">${details.vicinity || 'N/A'}</a></div>
                             <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
@@ -468,7 +467,7 @@
         }
 
         function getFavorites() {
-            fetch('/api/load_favorites', {
+            fetch('api/load_favorites/', {
                 method: 'GET',
             })
             .then(response => response.json())
@@ -505,13 +504,9 @@
         }
 
         function saveFavorite(placeId) {
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            fetch('/api/save_favorite', {
+            fetch(`api/save_favorite/${placeId}/`, {
                 method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                credentials: 'include',
                 body: new URLSearchParams({ place_id: placeId })
             })
             .then(response => response.json())
@@ -521,7 +516,10 @@
                 } else if (data.status === 'already_exists') {
                     alert('This place is already in your favorites.');
                 }
-            });
+            })
+            .catch(error => {
+                console.error('Error: ', error);
+            })
         }
 
         document.getElementById("search-input").addEventListener("keypress", function(event) {

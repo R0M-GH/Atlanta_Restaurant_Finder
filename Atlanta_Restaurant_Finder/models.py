@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Favorite(models.Model):
+
+class Favorites(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     place_id = models.TextField()
 
