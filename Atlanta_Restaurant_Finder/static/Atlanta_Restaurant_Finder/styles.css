@@ -81,6 +81,7 @@ h1 {
 }
 #login-button,
 .create-account-button {
+    font-family: 'Gloock';
     width: 30%;
     padding: 10px;
     border: none;
@@ -92,11 +93,13 @@ h1 {
     color: white;
 }
 #login-button {
+    font-family: 'Gloock';
     background-color: #a924f6;
     color: white;
 }
 
 #login-button:hover {
+    font-family: 'Gloock';
     background-color: #9220d1;
 }
 .create-account-button {
@@ -131,4 +134,23 @@ p {
     opacity: .3;
     opacity: .3;
     z-index: 9999;
+}
+.forgot-password {
+    width: 30%;
+    padding: 10px;
+    border-radius: 30px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    color: #a924f6;
+    text-decoration: none;
+    display: inline-block;
+    border: 2px solid #a924f6;
+}
+#cforgot-password {
+    background-color: transparent;
+    border: 2px solid rgba(169, 36, 246, 0.8);
+}
+.forgot-password:hover {
+    background-color: #a924f6;
+    color: white;
 }
