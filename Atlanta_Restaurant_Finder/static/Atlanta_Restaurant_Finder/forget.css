@@ -27,18 +27,16 @@ section img {
     object-fit: cover;
     z-index: 1; /* Image behind form */
 }
-
 .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(246, 36, 141, 0.66);
+    background-color: rgba(92, 0, 47, 0.66);
     opacity: .3;
     z-index: 2;
 }
-
 .form-container {
     position: fixed;
     top: 50%;
@@ -49,13 +47,11 @@ section img {
     border-radius: 10px;
     z-index: 3; /* Form on top */
     text-align: center;
-    width: 90%; /* Flexible width */
-    max-width: 400px; /* Max width for larger screens */
 }
 
 /* Form elements styling */
 h1 {
-    font-size: 6vw; /* Responsive font size */
+    font-size: 100px;
     font-family: Gloock;
     margin-bottom: 20px;
     background-color: transparent;
@@ -64,32 +60,27 @@ h1 {
 }
 
 .form input {
-    width: 100%; /* Flexible width */
+    width: 70%;
     padding: 10px;
     border-radius: 30px;
     margin-bottom: 15px;
     border: none;
-    background-color: white;
+    background-color: white; /* Set background to 30% white opacity */
     color: #000;
     font-size: 1.1em;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
 .form input::placeholder {
     color: black; /* Lighter placeholder text */
 }
-
 .button-container {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    flex-wrap: wrap; /* Allows buttons to stack on small screens */
 }
-
 #login-button,
-.create-account-button,
-#reset-button {
-    flex-grow: 1; /* Buttons grow to fill the space */
+.create-account-button {
+    width: 30%;
     padding: 10px;
     border: none;
     border-radius: 30px;
@@ -98,18 +89,31 @@ h1 {
     font-size: 1em;
     background-color: rgba(246, 36, 141, 0.66);
     color: white;
-    margin-bottom: 10px; /* Add spacing on small screens */
+}
+#reset-button {
+    width: 30%;
+    padding: 10px;
+    border-radius: 30px;
+    margin-bottom: 15px;
+    border: none;
+    background-color: rgba(246, 36, 141, 0.66);
+    color: white;
 }
 
 #reset-button:hover {
     background-color: rgba(234, 35, 134, 0.66);
 }
-
+.create-account-button {
+    background-color: rgba(246, 36, 141, 0.66);
+    color: rgba(246, 36, 141, 0.66);
+    text-decoration: none;
+    display: inline-block;
+    border: 2px solid rgba(246, 36, 141, 0.66);
+}
 #create-account-button {
     background-color: transparent;
     border: 2px solid rgba(246, 36, 141, 0.66);
 }
-
 .create-account-button:hover {
     background-color: rgba(246, 36, 141, 0.66);
     color: white;
@@ -127,7 +131,8 @@ p {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(87, 14, 55, 0.66);
+    background-color: rgba(87, 14, 52, 0.66);
+    opacity: .3;
     opacity: .3;
     z-index: 9999;
 }
@@ -143,8 +148,7 @@ p {
     text-align: left;
     color: black;
     font-size: 0.9em;
-    width: 100%; /* Flexible width */
-    max-width: 400px; /* Max width for larger screens */
+    width: 70%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -159,48 +163,4 @@ p {
 
 .password-requirements li:not(.valid) {
     color: red;
-}
-
-/* Media queries for responsiveness */
-@media (max-width: 768px) {
-    .form-container {
-        padding: 20px 20px;
-        width: 80%; /* Reduce form width on smaller screens */
-    }
-
-    h1 {
-        font-size: 8vw; /* Adjust title size */
-    }
-
-    .form input {
-        font-size: 1em; /* Reduce input font size */
-    }
-
-    .password-requirements {
-        font-size: 0.8em; /* Reduce list font size */
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 10vw; /* Further reduce title size */
-    }
-
-    .form input {
-        font-size: 0.9em; /* Adjust input font size */
-    }
-
-    .button-container {
-        flex-direction: column; /* Stack buttons vertically on very small screens */
-    }
-
-    #login-button,
-    .create-account-button,
-    #reset-button {
-        width: 100%; /* Full width buttons */
-    }
-
-    .password-requirements {
-        font-size: 0.7em; /* Further reduce list font size */
-    }
 }
