@@ -61,7 +61,7 @@
         }
         #filter-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
             margin-top: 10px;
         }
         .filter-button {
@@ -86,7 +86,7 @@
             color: white;
         }
         #results {
-            max-height: 500px;
+            max-height: 600px;
             overflow-y: auto;
             margin-top: 10px;
             display: none;
@@ -94,14 +94,14 @@
         .card {
             padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
             cursor: pointer;
             transition: box-shadow 0.3s;
             background: #fff;
         }
         .card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         .card-title {
             font-weight: bold;
@@ -112,8 +112,8 @@
             font-size: 0.9em;
         }
         #details {
-            max-height: 300px; /* Adjust as needed */
-            overflow-y: auto;  /* Enable vertical scrolling */
+            max-height: 600px;
+            overflow-y: auto;
             display: none;
             margin-top: 10px;
             padding: 15px;
@@ -185,11 +185,6 @@
         .review-text {
             font-size: 1em;
         }
-        #results {
-            max-height: 300px; /* Adjust as needed */
-            overflow-y: auto;  /* Enable vertical scrolling */
-            margin-top: 10px;
-            display: none;}
     </style>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUR66ihx1SRQ1oqLWlAnmUFuE9swuiWUI&libraries=places"></script>
@@ -307,7 +302,7 @@
                             <div class="details-title">${details.name}</div>
                             <div class="details-info"><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(details.vicinity)}" target="_blank">${details.vicinity || 'N/A'}</a></div>
                             <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
-                            <div class="details-info"><i class="fas fa-clock"></i> ${details.opening_hours.weekday_text[new Date().getDay() + 6 % 7]}</div>
+                            <div class="details-info"><i class="fas fa-clock"></i> ${details.opening_hours.weekday_text[(new Date().getDate() + 6) % 7]}</div>
                             <div class="details-info star-rating"><i class="fas fa-star"></i> ${'★'.repeat(Math.round(details.rating || 0))}${'☆'.repeat(5 - Math.round(details.rating || 0))} (${details.rating || 'N/A'}/5)</div>
                             <div class="details-info"><i class="fas fa-utensils"></i> Cuisine: ${details.types.find(type => type.includes("_restaurant")) ? details.types.find(type => type.includes("_restaurant")).replace("_restaurant", "").replace("_", " ") : "Restaurant"}</div>
                         </div>
@@ -337,7 +332,7 @@
                     map.panTo(targetLocation);
 
                     let currentZoom = map.getZoom();
-                    const targetZoom = 19.5;
+                    const targetZoom = 20;
                     const zoomStep = 0.5;
 
                     const zoomInInterval = setInterval(() => {
