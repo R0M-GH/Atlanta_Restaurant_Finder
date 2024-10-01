@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import RegistrationForm
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from .models import Favorites
 
 
@@ -23,11 +23,9 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            # Create user with validated data
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user = User.objects.create_user(username=username, password=password)
-            # Optionally, you can add more user attributes here
             return redirect("login")
     else:
         form = RegistrationForm()
