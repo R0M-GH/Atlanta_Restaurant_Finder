@@ -199,7 +199,7 @@
     <div id="search-container">
         <div id="search-bar">
             <label for="search-input"></label><input id="search-input" type="text" placeholder="Enter a restaurant type..." />
-            <button id="search-button"><i class="fas fa-search"></i></button>
+            <button id="search-button" onclick="performSearch(document.getElementById('search-input').value)"><i class="fas fa-search"></i></button>
         </div>
         <div id="filter-container">
             <button class="filter-button" id="distance-filter" onclick="changeDistanceFilter()">Distance: All</button>
@@ -227,23 +227,48 @@
             });
         }
 
-        function createMarker(place) {
-            const marker = new google.maps.Marker({
-                position: place.geometry.location,
-                map: map,
-                title: place.name,
+        function performSearch(query, dist = 'All', rating = 'All') {
+            if (!query) {
+                displayResults([]);
+                return;
+            }
+
+            clearMarkers();
+            currentQuery = query;
+
+            let radius;
+            switch (dist) {
+                case '1 mi': radius = 1609.34; break;
+                case '2 mi': radius = 3218.69; break;
+                case '3 mi': radius = 4828.03; break;
+                case '4 mi': radius = 6437.38; break;
+                case '5 mi': radius = 8046.72; break;
+                default: radius = 9000;
+            }
+
+            const service = new google.maps.places.PlacesService(map);
+            service.nearbySearch({
+                location: {lat: 33.7490, lng: -84.3880},
+                radius: radius,
+                keyword: query,
+                type: 'restaurant',
+                pagetoken: 100,
+            }, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    currentResults = results;
+                    if (currentRatingFilter !== 'All') {
+                        const ratingValue = parseInt(currentRatingFilter.split(' ')[0], 10);
+                        currentResults = currentResults.filter(place => {
+                            return place.rating && place.rating >= ratingValue;
+                        });
+                    }
+
+                    displayResults(currentResults);
+                } else {
+                    displayResults([]);
+                    alert('No places found. Please try another search term.');
+                }
             });
-
-            marker.addListener('click', function () {
-                showDetails(place);
-            });
-
-            markers.push(marker);
-        }
-
-        function clearMarkers() {
-            markers.forEach(marker => marker.setMap(null));
-            markers = [];
         }
 
         function displayResults(results) {
@@ -359,15 +384,23 @@
             });
         }
 
-        function toggleReviews() {
-            const reviewContainer = document.querySelector('.reviews');
-            if (reviewContainer.style.display === 'none') {
-                reviewContainer.style.display = 'block';
-                document.getElementById("reviews-toggle").innerText = "Hide Reviews";
-            } else {
-                reviewContainer.style.display = 'none';
-                document.getElementById("reviews-toggle").innerText = "Show Reviews";
-            }
+        function createMarker(place) {
+            const marker = new google.maps.Marker({
+                position: place.geometry.location,
+                map: map,
+                title: place.name,
+            });
+
+            marker.addListener('click', function () {
+                showDetails(place);
+            });
+
+            markers.push(marker);
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
         }
 
         function goBack() {
@@ -379,52 +412,15 @@
             performSearch(currentQuery);
         }
 
-        function performSearch(query, dist = 'All', rating = 'All') {
-            if (!query) {
-                displayResults([]);
-                return;
-            }
-
-            clearMarkers();
-            currentQuery = query;
-
-            let radius;
-            switch (dist) {
-                case '1 mi': radius = 1609.34; break;
-                case '2 mi': radius = 3218.69; break;
-                case '3 mi': radius = 4828.03; break;
-                case '4 mi': radius = 6437.38; break;
-                case '5 mi': radius = 8046.72; break;
-                default: radius = 9000;
-            }
-
-            if (query === '!!favorites!!') {
-                return;
+        function toggleReviews() {
+            const reviewContainer = document.querySelector('.reviews');
+            if (reviewContainer.style.display === 'none') {
+                reviewContainer.style.display = 'block';
+                document.getElementById("reviews-toggle").innerText = "Hide Reviews";
             } else {
-                const service = new google.maps.places.PlacesService(map);
-                service.nearbySearch({
-                    location: {lat: 33.7490, lng: -84.3880},
-                    radius: radius,
-                    keyword: query,
-                    type: 'restaurant',
-                }, (results, status) => {
-                    if (status === google.maps.places.PlacesServiceStatus.OK) {
-                        currentResults = results;
-                    } else {
-                        displayResults([]);
-                        alert('No places found. Please try another search term.');
-                    }
-                });
+                reviewContainer.style.display = 'none';
+                document.getElementById("reviews-toggle").innerText = "Show Reviews";
             }
-
-            if (currentRatingFilter !== 'All') {
-                const ratingValue = parseInt(currentRatingFilter.split(' ')[0], 10);
-                currentResults = currentResults.filter(place => {
-                    return place.rating && place.rating >= ratingValue;
-                });
-            }
-
-            displayResults(currentResults);
         }
 
         function changeDistanceFilter() {
@@ -459,10 +455,9 @@
             performSearch(currentQuery, undefined, currentRatingFilter);
         }
 
-        document.getElementById("search-button").onclick = () => {
-            currentQuery = document.getElementById("search-input").value;
-            performSearch(currentQuery);
-        };
+        function getFavorites() {
+            displayResults(currentResults);
+        }
 
         document.getElementById("search-input").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
