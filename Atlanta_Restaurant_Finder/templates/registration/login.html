@@ -18,10 +18,16 @@
              <h1>Login</h1>
             <form method = "POST" id="login-form" class="form">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
+                {{ form.username }}
+                {{ form.password }}
+            
                 <button type="submit" id="login-button">Login</button>
                 <a href="/register" class="create-account-button">Create Account</a>
+                
+                {% if error %}
+                    <p id = "loginErrorMessage" class = "errorMessage">Username or Password is incorrect!</p>
+                {% endif %}
+            
             </form>
         </div>
         <section >

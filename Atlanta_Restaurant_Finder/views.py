@@ -3,11 +3,10 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-
-from .forms import RegistrationForm
 from django.http import JsonResponse
 from .models import Favorites
-
+from .forms import RegistrationForm, LoginForm
+from django.contrib.auth import authenticate, login, logout
 
 @login_required
 def hi(request):
@@ -18,6 +17,18 @@ def hi(request):
 def map_view(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
 
+def login_view(request):
+    if request.method == 'POST':
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            return redirect('home-page')
+        else:
+            form = LoginForm()
+            return render(request, 'registration/login.html', {'form': form, 'error': True})
+    else:
+        form = LoginForm()
+    return render(request, 'registration/login.html', {'form': form})
 
 def register(request):
     if request.method == 'POST':
@@ -25,6 +36,10 @@ def register(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
+
+            if User.objects.filter(username=username).exists():
+                return render(request, 'registration/register.html', {"form": form, 'error': True})
+
             user = User.objects.create_user(username=username, password=password)
             return redirect("login")
     else:
