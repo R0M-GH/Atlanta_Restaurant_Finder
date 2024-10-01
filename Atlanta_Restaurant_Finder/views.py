@@ -49,7 +49,6 @@ def save_favorite(request, place_id):
 @csrf_exempt
 @login_required
 def load_favorites(request):
-    print("load_favorite called")
     favorites = Favorites.objects.filter(user=request.user)
-    return [{'place_id': fav.place_id} for fav in favorites]
+    return JsonResponse([fav.place_id for fav in favorites], safe=False)
 
