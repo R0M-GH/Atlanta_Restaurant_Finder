@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .forms import RegistrationForm  # Import the form you just crea
+from .forms import RegistrationForm
+from django.http import JsonResponse
+from .models import Favorite
 
 
 @login_required
@@ -36,3 +36,27 @@ def register(request):
         form = RegistrationForm()
 
     return render(request, 'registration/register.html', {"form": form})
+
+
+def save_favorite(request):
+    print("save_favorite called")
+    if request.method == 'POST':
+        user = request.user
+        place_id = request.POST.get('place_id')
+
+        if not Favorite.objects.filter(user=user, place_id=place_id).exists():
+            favorite = Favorite(user=user, place_id=place_id)
+            favorite.save()
+            return JsonResponse({'status': 'saved'}, status=200)
+        else:
+            return JsonResponse({'status': 'already_exists'}, status=400)
+
+    return JsonResponse({'status': 'error'}, status=400)
+
+
+def load_favorites(request):
+    print("load_favorite called")
+    if request.method == 'GET':
+        user = request.user
+        favorites = Favorite.objects.filter(user=user).values_list('place_id', flat=True)
+        return JsonResponse({'favorites': list(favorites)}, status=200)
