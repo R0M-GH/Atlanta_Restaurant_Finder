@@ -7,6 +7,8 @@ from django.shortcuts import render
 from .forms import RegistrationForm  # Import the form you just crea
 from .models import UserProfile
 from django.contrib.auth.hashers import make_password
+from .forms import RegistrationForm, LoginForm # Import the form you just crea
+from django.contrib.auth import authenticate, login, logout
 
 @login_required
 def hi(request):
@@ -21,6 +23,19 @@ def homeView(request):
 @login_required
 def mapView(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            return redirect('home-page')
+        else:
+            form = LoginForm()
+            return render(request, 'registration/login.html', {'form': form, 'error': True})
+    else:
+        form = LoginForm()
+    return render(request, 'registration/login.html', {'form': form})
 
 def ForgetView(request):
     if request.method == 'POST':
@@ -60,6 +75,13 @@ def register(request):
             user = User.objects.create(username=username, password=make_password(password1))
             user_profile = UserProfile.objects.create(user=user, birthday=birthday)
 
+            password = form.cleaned_data['password1']
+
+            if User.objects.filter(username=username).exists():
+                return render(request, 'registration/register.html', {"form": form, 'error': True})
+
+            user = User.objects.create_user(username=username, password=password)
+            # Optionally, you can add more user attributes here
             return redirect("login")
     else:
         form = RegistrationForm()

@@ -1,0 +1,18 @@
+{
+  "name": "atlanta_restaurant_finder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nagarkarvihaan/Atlanta_Restaurant_Finder.git"
+  },
+  "private": true,
+  "dependencies": {
+    "openai": "^4.67.0"
+  }
+}
