@@ -91,4 +91,4 @@ This web app helps users discover restaurants in Atlanta by integrating Google M
 ## Team
 - Scrum Master: Vihaan Nagarkar
 - Product Owner: Jeshal Patel
-- Team Members: Joshua Derival, Rohan Malla, Vihaan Nagarkar
+- Team Members: Joshua Derival, Rohan Malla, Vihaan Nagarkar, Jeshal Patel
