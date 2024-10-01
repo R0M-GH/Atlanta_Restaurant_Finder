@@ -45,7 +45,7 @@
             outline: none;
         }
         #search-button {
-            padding: 10px 15px;
+            padding: 10px 12px;
             margin-left: 5px;
             border: none;
             border-radius: 25px;
@@ -57,7 +57,7 @@
         }
         #search-button:hover {
             background: linear-gradient(90deg, #1976D2, #42A5F5);
-            transform: scale(1.1);
+            transform: scale(1.07);
         }
         #filter-container {
             display: flex;
@@ -65,12 +65,12 @@
             margin-top: 10px;
         }
         .filter-button {
-            padding: 10px 15px;
+            padding: 10px 12px;
             border: none;
             border-radius: 25px;
             background: linear-gradient(90deg, #2196F3, #64B5F6);
             color: white;
-            font-size: smaller;
+            font-size: medium;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
@@ -79,7 +79,7 @@
         }
         .filter-button:hover {
             background: linear-gradient(90deg, #1976D2, #42A5F5);
-            transform: scale(1.1);
+            transform: scale(1.07);
         }
         .filter-button.filter-active {
             background: linear-gradient(45deg, #ff4e50, #fd9898);
@@ -198,13 +198,13 @@
 <body>
     <div id="search-container">
         <div id="search-bar">
-            <label for="search-input"></label><input id="search-input" type="text" placeholder="Enter a restaurant type..." />
+            <label for="search-input"></label><input id="search-input" type="text" placeholder="Enter a restaurant type..."/>
             <button id="search-button" onclick="performSearch(document.getElementById('search-input').value)"><i class="fas fa-search"></i></button>
         </div>
         <div id="filter-container">
             <button class="filter-button" id="distance-filter" onclick="changeDistanceFilter()">Distance: All</button>
             <button class="filter-button" id="rating-filter" onclick="changeRatingFilter()">Rating: All</button>
-            <button class="filter-button" id="favorites-filter"><i class="fas fa-star"></i></button><!--onclick="changeRatingFilter()"-->
+            <button class="filter-button" id="favorites-filter" onclick="getFavorites()"><i class="fas fa-star"></i></button>
         </div>
         <div id="results"></div>
         <div id="details"></div>
@@ -320,11 +320,8 @@
 
                     detailsContainer.innerHTML = `
                         <div class="details-header">
-                            <div class="back-button" onclick="goBack()">
-                                <i class="fa-solid fa-rotate-left"></i>
-                                Back to Results
-                            </div>
-                            <div class="details-title">${details.name}</div>
+                            <div class="back-button" onclick="goBack()"><i class="fa-solid fa-rotate-left"></i>Back to Results</div>
+                            <div class="details-title">${details.name} ${place.place_id}</div>
                             <div class="details-info"><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(details.vicinity)}" target="_blank">${details.vicinity || 'N/A'}</a></div>
                             <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
                             <div class="details-info"><i class="fas fa-clock"></i> ${details.opening_hours.weekday_text[(new Date().getDate() + 6) % 7]}</div>
@@ -460,10 +457,7 @@
         }
 
         document.getElementById("search-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                currentQuery = document.getElementById("search-input").value;
-                performSearch(currentQuery);
-            }
+            if (event.key === "Enter") performSearch(document.getElementById("search-input").value);
         });
 
         window.onload = initMap;
