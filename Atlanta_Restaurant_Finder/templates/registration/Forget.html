@@ -1,0 +1,113 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'Atlanta_Restaurant_Finder/forget.css' %}">
+        <script>
+            function redirectToHome(event) {
+                event.preventDefault();
+                window.location.href = '/home';
+            }
+        </script>
+    </head>
+    <body>
+        <div class="form-container">
+             <h1>Forgot Password</h1>
+            <form method="POST" id="forget-form" class="form">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="date" id="id_birthday" name="birthday" required>
+                <input type="password" id="new_password1" name="new_password1" placeholder="New Password" required>
+                <input type="password" id="new_password2" name="new_password2" placeholder="Confirm New Password" required>
+
+                <!-- Password requirements list -->
+                <ul class="password-requirements">
+                    <li id="length-requirement">At least 8 characters</li>
+                    <li id="uppercase-requirement">At least one uppercase letter</li>
+                    <li id="number-requirement">At least one number</li>
+                    <li id="special-char-requirement">At least one special character (e.g., !@#$%^&*)</li>
+                    <li id="not-numeric-requirement">Not entirely numeric</li>
+                    <li id="match-password-requirement">Passwords must match</li>
+                </ul>
+                <button type="submit" id="reset-button" disabled>Reset Password</button>
+            </form>
+        </div>
+        <script>
+            function validatePassword() {
+                const password1 = document.getElementById('new_password1').value;
+                const password2 = document.getElementById('new_password2').value;
+
+                const lengthRequirement = document.getElementById('length-requirement');
+                const uppercaseRequirement = document.getElementById('uppercase-requirement');
+                const numberRequirement = document.getElementById('number-requirement');
+                const specialCharRequirement = document.getElementById('special-char-requirement');
+                const notNumericRequirement = document.getElementById('not-numeric-requirement');
+                const matchPasswordRequirement = document.getElementById('match-password-requirement');
+
+                let isValid = true;
+
+                // Check if password is at least 8 characters long
+                if (password1.length >= 8) {
+                    lengthRequirement.classList.add('valid');
+                } else {
+                    lengthRequirement.classList.remove('valid');
+                    isValid = false;
+                }
+
+                // Check if password contains an uppercase letter
+                if (/[A-Z]/.test(password1)) {
+                    uppercaseRequirement.classList.add('valid');
+                } else {
+                    uppercaseRequirement.classList.remove('valid');
+                    isValid = false;
+                }
+
+                // Check if password contains a number
+                if (/\d/.test(password1)) {
+                    numberRequirement.classList.add('valid');
+                } else {
+                    numberRequirement.classList.remove('valid');
+                    isValid = false;
+                }
+
+                // Check if password contains a special character
+                if (/[^A-Za-z0-9]/.test(password1)) {
+                    specialCharRequirement.classList.add('valid');
+                } else {
+                    specialCharRequirement.classList.remove('valid');
+                    isValid = false;
+                }
+
+                // Check if password is not entirely numeric
+                if (!/^\d+$/.test(password1)) {
+                    notNumericRequirement.classList.add('valid');
+                } else {
+                    notNumericRequirement.classList.remove('valid');
+                    isValid = false;
+                }
+
+                // Check if passwords match
+                if (password1 && password2 && password1 === password2) {
+                    matchPasswordRequirement.classList.add('valid');
+                } else {
+                    matchPasswordRequirement.classList.remove('valid');
+                    isValid = false;
+                }
+
+                // Enable or disable the submit button based on validity
+                document.getElementById('reset-button').disabled = !isValid;
+            }
+
+            // Listen for changes in both password fields
+            document.getElementById('new_password1').addEventListener('input', validatePassword);
+            document.getElementById('new_password2').addEventListener('input', validatePassword);
+        </script>
+        <section >
+            <img src="{% static "Atlanta_Restaurant_Finder/image/patrick-tomasso-GXXYkSwndP4-unsplash (1).jpg" %}">
+            <div class="overlay"></div>
+        </section>
+    </body>
+</html>

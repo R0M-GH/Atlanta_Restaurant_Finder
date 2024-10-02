@@ -18,7 +18,7 @@ body img {
     z-index: 1;
 }
 header {
-    background-color: rgba(207, 101, 253, 0.66);
+    background-color: rgba(81, 188, 255, 0.66);
     position: fixed;
     top: 0;
     left: 0;
@@ -38,7 +38,7 @@ h1 {
 
 .logout-button {
     background-color: white;
-    color: rgba(169, 36, 246, 0.66);
+    color: rgba(36, 169, 246, 0.66);
     padding: 10px 15px;
     border: none;
     border-radius: 30px;
@@ -48,7 +48,7 @@ h1 {
 }
 
 .logout-button:hover {
-    background-color: rgba(169, 36, 246, 0.66);
+    background-color: rgba(36, 169, 246, 0.66);
     color: white;
 }
 
