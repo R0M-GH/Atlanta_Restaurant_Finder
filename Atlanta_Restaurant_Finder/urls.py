@@ -9,4 +9,5 @@ urlpatterns = [
     path('map.html/', views.map_view),
     path('map.html/api/save_favorite/<str:place_id>/', views.save_favorite, name='save_favorite'),
     path('map.html/api/load_favorites/', views.load_favorites, name='load_favorites'),
+    path('Forget/', views.ForgetView),
 ]

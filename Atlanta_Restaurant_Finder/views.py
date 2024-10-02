@@ -2,9 +2,10 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Favorites
+from .models import UserProfile
+from django.contrib.auth.hashers import make_password
 from .forms import RegistrationForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 
@@ -30,11 +31,43 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form})
 
+def ForgetView(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        birthday = request.POST['birthday']
+        new_password1 = request.POST['new_password1']
+        new_password2 = request.POST['new_password2']
+
+        if new_password1 != new_password2:
+            return render(request, 'registration/Forget.html', {'error': 'Passwords do not match'})
+
+        try:
+            user = User.objects.get(username=username)
+            profile = UserProfile.objects.get(user=user)
+
+            if str(profile.birthday) == birthday:  # Check if birthday matches
+                user.password = make_password(new_password1)
+                user.save()
+                return redirect('login')
+            else:
+                return render(request, 'registration/Forget.html', {'error': 'Birthday does not match'})
+
+        except User.DoesNotExist:
+            return render(request, 'registration/Forget.html', {'error': 'User not found'})
+
+    return render(request, 'registration/Forget.html')
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
+            password1 = form.cleaned_data['password1']
+            birthday = form.cleaned_data['birthday']
+
+            # Manually create the user
+            user = User.objects.create(username=username, password=make_password(password1))
+            user_profile = UserProfile.objects.create(user=user, birthday=birthday)
+
             password = form.cleaned_data['password1']
 
             if User.objects.filter(username=username).exists():

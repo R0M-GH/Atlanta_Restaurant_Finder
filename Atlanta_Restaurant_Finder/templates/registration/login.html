@@ -22,7 +22,9 @@
                 {{ form.password }}
             
                 <button type="submit" id="login-button">Login</button>
-                <a href="/register" class="create-account-button">Create Account</a>
+                <a href="/register" class="create-account-button">Register</a>
+                <!-- Add this line in your login page HTML, just below the login button -->
+                <a href="/Forget" class="forgot-password">Forgot Password?</a>
                 
                 {% if error %}
                     <p id = "loginErrorMessage" class = "errorMessage">Username or Password is incorrect!</p>
