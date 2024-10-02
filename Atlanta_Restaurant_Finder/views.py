@@ -9,7 +9,10 @@ from .models import Favorites
 from .models import UserProfile
 from django.contrib.auth.hashers import make_password
 from .forms import RegistrationForm, LoginForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
+
+from openai import OpenAI
+
 
 @login_required
 def hi(request):
@@ -19,6 +22,7 @@ def hi(request):
 @login_required
 def map_view(request):
     return render(request, 'Atlanta_Restaurant_Finder/map.html')
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -32,6 +36,7 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form})
+
 
 def ForgetView(request):
     if request.method == 'POST':
@@ -58,6 +63,8 @@ def ForgetView(request):
             return render(request, 'registration/Forget.html', {'error': 'User not found'})
 
     return render(request, 'registration/Forget.html')
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -100,3 +107,23 @@ def load_favorites(request):
     favorites = Favorites.objects.filter(user=request.user)
     return JsonResponse([fav.place_id for fav in favorites], safe=False)
 
+
+@csrf_exempt
+@login_required
+def get_cuisine(request, place_details):
+    client = OpenAI(
+        base_url="https://integrate.api.nvidia.com/v1",
+        api_key="$API_KEY_REQUIRED_IF_EXECUTING_OUTSIDE_NGC"
+    )
+    completion = client.chat.completions.create(
+        model="meta/llama-3.1-405b-instruct",
+        messages=[{"role": "user",
+                   "content": f"What kind of cuisine is served at {place_details}? Make sure your response takes up at most 1 token."}],
+        temperature=0.2,
+        top_p=0.7,
+        max_tokens=1024,
+        stream=True
+    )
+    for chunk in completion:
+        if chunk.choices[0].delta.content:
+            return JsonResponse({'cuisine': chunk.choices[0].delta.content})
