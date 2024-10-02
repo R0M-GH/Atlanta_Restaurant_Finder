@@ -8,7 +8,7 @@ from .models import Favorites
 from .models import UserProfile
 from django.contrib.auth.hashers import make_password
 from .forms import RegistrationForm, LoginForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from openai import OpenAI
 
@@ -84,6 +84,10 @@ def register(request):
         form = RegistrationForm()
 
     return render(request, 'registration/register.html', {"form": form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 @csrf_exempt
 @login_required
