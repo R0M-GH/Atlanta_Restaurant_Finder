@@ -71,22 +71,19 @@ def register(request):
             password1 = form.cleaned_data['password1']
             birthday = form.cleaned_data['birthday']
 
-            # Manually create the user
-            user = User.objects.create(username=username, password=make_password(password1))
-            user_profile = UserProfile.objects.create(user=user, birthday=birthday)
-
-            password = form.cleaned_data['password1']
-
+            # Check if username already exists
             if User.objects.filter(username=username).exists():
                 return render(request, 'registration/register.html', {"form": form, 'error': True})
 
-            user = User.objects.create_user(username=username, password=password)
+            # Create user and user profile
+            user = User.objects.create_user(username=username, password=password1)
+            user_profile = UserProfile.objects.create(user=user, birthday=birthday)
+
             return redirect("login")
     else:
         form = RegistrationForm()
 
     return render(request, 'registration/register.html', {"form": form})
-
 
 @csrf_exempt
 @login_required

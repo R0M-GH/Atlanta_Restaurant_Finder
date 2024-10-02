@@ -32,7 +32,12 @@
                     <li id="not-numeric-requirement">Not entirely numeric</li>
                     <li id="match-password-requirement">Passwords must match</li>
                 </ul>
+
                 <button type="submit" id="reset-button" disabled>Reset Password</button>
+                {% if error %}
+                    <p id = "loginErrorMessage" class = "errorMessage">Username or Birthday is incorrect!</p>
+                {% endif %}
+
             </form>
         </div>
         <script>
