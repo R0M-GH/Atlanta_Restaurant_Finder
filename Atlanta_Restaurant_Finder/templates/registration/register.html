@@ -96,13 +96,13 @@
 
             <!-- Add placeholder for confirm password -->
             {{ form.password2 }}
-        
-            {% if error %}
-                <p id = "loginErrorMessage" class = "errorMessage">The username already exists! Choose a new username or go to the login page and click Forget Password</p> 
-            {% endif %}
+
             <!-- Add placeholder for birthday -->
              <input type="date" id="id_birthday" name="birthday" required>
 
+            {% if error %}
+                <p id = "loginErrorMessage" class = "errorMessage">The username already exists! Choose a new username or go to the login page and click Forget Password</p>
+            {% endif %}
             <!-- Password requirements list, centered between second password and Create Account button -->
             <ul class="password-requirements">
                 <li id="length-requirement">At least 8 characters</li>

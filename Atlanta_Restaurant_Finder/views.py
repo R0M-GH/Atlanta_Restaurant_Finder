@@ -13,7 +13,6 @@ from django.contrib.auth import authenticate, login
 
 from openai import OpenAI
 
-
 @login_required
 def hi(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html', {})
