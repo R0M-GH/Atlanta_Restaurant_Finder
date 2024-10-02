@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import Favorites
 from .models import UserProfile
 from django.contrib.auth.hashers import make_password
