@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from openai import OpenAI
 
+
 @login_required
 def hi(request):
     return render(request, 'Atlanta_Restaurant_Finder/index.html', {})
@@ -85,9 +86,11 @@ def register(request):
 
     return render(request, 'registration/register.html', {"form": form})
 
+
 def logout_view(request):
     logout(request)
     return redirect('login')
+
 
 @csrf_exempt
 @login_required
