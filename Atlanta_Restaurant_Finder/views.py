@@ -113,17 +113,19 @@ def load_favorites(request):
 def get_cuisine(request, place_details):
     client = OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-        api_key="$API_KEY_REQUIRED_IF_EXECUTING_OUTSIDE_NGC"
+        api_key="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"
     )
     completion = client.chat.completions.create(
         model="meta/llama-3.1-405b-instruct",
         messages=[{"role": "user",
-                   "content": f"What kind of cuisine is served at {place_details}? Make sure your response takes up at most 1 token."}],
+                   "content": f"What kind of cuisine is served at {place_details}? Make sure your response takes up only 1 token."}],
         temperature=0.2,
         top_p=0.7,
         max_tokens=1024,
         stream=True
     )
+    cuisine = ''
     for chunk in completion:
         if chunk.choices[0].delta.content:
-            return JsonResponse({'cuisine': chunk.choices[0].delta.content})
+            cuisine += chunk.choices[0].delta.content
+    return JsonResponse({'cuisine': cuisine})

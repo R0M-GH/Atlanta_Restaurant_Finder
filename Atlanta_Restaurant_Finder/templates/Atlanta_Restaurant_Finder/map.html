@@ -341,12 +341,14 @@
                             <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
                             <div class="details-info"><i class="fas fa-clock"></i> ${details.opening_hours.weekday_text[(new Date().getDate() + 6) % 7]}</div>
                             <div class="details-info star-rating"><i class="fas fa-star"></i> ${'★'.repeat(Math.round(details.rating || 0))}${'☆'.repeat(5 - Math.round(details.rating || 0))} (${details.rating || 'N/A'}/5)</div>
-                            <div class="details-info"><i class="fas fa-utensils"></i> Cuisine: ${details.types.find(type => type.includes("_restaurant")) ? details.types.find(type => type.includes("_restaurant")).replace("_restaurant", "").replace("_", " ") : "Restaurant"}</div>
+                            <div class="details-info"><i class="fas fa-utensils"></i> Cuisine: <span id="cuisine-${details.place_id}">Loading...</span></div>
                         </div>
                         <div class="details-image-carousel">${imageSlides}</div>
                         <div class="expand" id="reviews-toggle" onclick="toggleReviews()">Show Reviews</div>
                         <div class="reviews" style="display: none; max-height: 200px; overflow-y: auto;"></div>
                     `;
+
+                    updateCuisine(details.name, details.place_id);
 
                     if (details.photos) {
                         setTimeout(() => {
@@ -521,6 +523,31 @@
             .catch(error => {
                 console.error('Error: ', error);
             })
+        }
+
+        async function getCuisine(restaurantDetails) {
+            try {
+                const response = await fetch(`api/get_cuisine/${restaurantDetails}/`, {
+                    method: 'GET',
+                });
+
+                const data = await response.json();
+
+                if (data.cuisine) {
+                    return data.cuisine;
+                } else if (data.error) {
+                    console.error("Error from API: ", data.error);
+                    return 'Restaurant';
+                }
+
+            } catch (error) {
+                console.error("Error fetching cuisine data: ", error);
+                return 'Restaurant';
+            }
+        }
+
+        async function updateCuisine(restaurantDetails, placeId) {
+            document.getElementById(`cuisine-${placeId}`).textContent = await getCuisine(restaurantDetails);
         }
 
         document.getElementById("search-input").addEventListener("keypress", function(event) {
