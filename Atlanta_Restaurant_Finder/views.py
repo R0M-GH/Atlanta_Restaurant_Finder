@@ -72,6 +72,8 @@ def register(request):
             password1 = form.cleaned_data['password1']
             birthday = form.cleaned_data['birthday']
 
+
+
             # Check if username already exists
             if User.objects.filter(username=username).exists():
                 return render(request, 'registration/register.html', {"form": form, 'error': True})
