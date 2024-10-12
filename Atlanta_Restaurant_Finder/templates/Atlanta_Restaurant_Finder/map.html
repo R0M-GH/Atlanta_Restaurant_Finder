@@ -332,10 +332,8 @@
 
                     detailsContainer.innerHTML = `
                         <div class="details-header">
-                            <div class="back-button" onclick="goBack()">
-                                <i class="fa-solid fa-rotate-left"></i> Back to Results
-                            </div>
-                            <button class="favorite-button" id="favorite-button-${place.place_id}" onclick="saveFavorite('${place.place_id}')"><i class="fas fa-star"></i></button>
+                            <div class="back-button" onclick="goBack()"><i class="fa-solid fa-rotate-left"></i> Back to Results</div>
+                            <button class="favorite-button" id="favorite-button-${place.place_id}" onclick="saveFavorite('${place.place_id}')"><i id="favorite-icon" class="fa-regular fa-star"></i></button>
                             <div class="details-title">${details.name}</div>
                             <div class="details-info"><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(details.vicinity)}" target="_blank">${details.vicinity || 'N/A'}</a></div>
                             <div class="details-info"><i class="fas fa-phone-alt"></i> ${details.formatted_phone_number || 'N/A'}</div>
@@ -348,6 +346,7 @@
                         <div class="reviews" style="display: none; max-height: 200px; overflow-y: auto;"></div>
                     `;
 
+                    isFavorite(place.place_id);
                     updateCuisine(details.name, details.place_id);
 
                     if (details.photos) {
@@ -515,6 +514,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'saved') {
+
                     alert('Favorite saved!');
                 } else if (data.status === 'already_exists') {
                     alert('This place is already in your favorites.');
@@ -523,6 +523,23 @@
             .catch(error => {
                 console.error('Error: ', error);
             })
+        }
+
+        function isFavorite(placeId) {
+            fetch(`api/is_favorite/${placeId}/`, {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_favorite) {
+                    document.getElementById('favorite-icon').classList.remove('fa-regular fa-star')
+                    document.getElementById('favorite-icon').classList.add('fa-solid fa-star')
+                }
+
+            })
+            .catch(error => {
+                console.error("Error checking favorite status:", error);
+            });
         }
 
         async function getCuisine(restaurantDetails) {

@@ -11,5 +11,6 @@ urlpatterns = [
     path('Forget/', views.ForgetView),
     path('map.html/api/save_favorite/<str:place_id>/', views.save_favorite, name='save_favorite'),
     path('map.html/api/load_favorites/', views.load_favorites, name='load_favorites'),
+    path('map.html/api/is_favorite/<str:place_id>/', views.is_favorite, name='is_favorite'),
     path('map.html/api/get_cuisine/<str:place_details>/', views.get_cuisine, name='get_cuisine'),
 ]
